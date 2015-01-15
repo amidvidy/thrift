@@ -7,6 +7,12 @@ namespace apache {
 namespace thrift {
 namespace protocol {
 
+namespace detail {
+
+    class BSONCtx;
+
+}  // detail
+
 // Thrift uses CRTP so that protocol implementors don't need
 // to override virtual methods
 class TBSONProtocol : public TVirtualProtocol<TBSONProtocol> {
@@ -72,6 +78,7 @@ public:
 
  private:
   TTransport* trans_;
+  std::unique_ptr<detail::BSONCtx> ctx_;
 };
 
 class TBSONProtocolFactory : public TProtocolFactory {

@@ -1,6 +1,6 @@
-#include <thrift/protocol/TBSONProtocol.h>
-
 #include <bson.h>
+
+#include <thrift/protocol/TBSONProtocol.h>
 
 using namespace apache::thrift::transport;
 
@@ -8,26 +8,63 @@ namespace apache {
 namespace thrift {
 namespace protocol {
 
+namespace detail {
+
+class BSONCtx {
+public:
+    BSONCtx() {
+        bson_init(&_bson);
+    }
+    ~BSONCtx() {
+        bson_destroy(&_bson);
+    }
+    bson_t _bson;
+
+    operator bson_t() { return _bson; }
+    operator bson_t*() { return &_bson; }
+};
+
+}
+
 namespace {
 
-enum class BSONState : std::uint8_t {
+// Message header constants
+const std::string kMsgHdrKey = "hdr";
 
+enum class BSONState : std::uint8_t {
+    
 };
 
 }  // namespace
 
 TBSONProtocol::TBSONProtocol(boost::shared_ptr<TTransport> ptrans)
     : TVirtualProtocol<TBSONProtocol>(ptrans),
-      trans_(ptrans.get()) {
+      trans_(ptrans.get()),
+      ctx_(new detail::BSONCtx()) {
 }
 
 TBSONProtocol::~TBSONProtocol() {
-}
+};
 
 uint32_t TBSONProtocol::writeMessageBegin(const std::string& name,
                            const TMessageType messageType,
-                           const int32_t seqid) { return 0; }
-uint32_t TBSONProtocol::writeMessageEnd() { return 0; }
+                           const int32_t seqid) {
+
+    bson_t header = BSON_INITIALIZER;
+    bson_append_array_begin(*ctx_, kMsgHdrKey.c_str(), kMsgHdrKey.length(), &header);
+
+    bson_append_utf8(&header, "0", 1, name.c_str(), name.length());
+    bson_append_int32(&header, "1", 1, messageType);
+    bson_append_int32(&header, "2", 1, seqid);
+
+    bson_append_array_end(*ctx_, &header);
+    return 0;
+}
+
+uint32_t TBSONProtocol::writeMessageEnd() { 
+    // TODO: write out bson
+    return 0; 
+}
 
 uint32_t TBSONProtocol::writeStructBegin(const char* name) { return 0; }
 uint32_t TBSONProtocol::writeStructEnd() { return 0; }
