@@ -89,4 +89,4 @@ public:
 }
 } // apache::thrift::protocol
 
-#endif
+#endif  // #define _THRIFT_PROTOCOL_TBSONPROTOCOL_H_ 1
