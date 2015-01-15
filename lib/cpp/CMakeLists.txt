@@ -17,8 +17,12 @@
 # under the License.
 #
 
-
 cmake_minimum_required(VERSION 2.8)
+
+# enable c++11 for cmake only build
+ADD_DEFINITIONS(
+  -std=c++11 
+)
 
 # Find required packages
 if(WITH_BOOSTTHREADS)
@@ -28,10 +32,15 @@ else()
 endif()
 include_directories(SYSTEM "${Boost_INCLUDE_DIRS}")
 
+include(FindBSON REQUIRED)
+include_directories(${BSON_INCLUDE_DIR})
+
 include_directories(src)
 
 # SYSLIBS contains libraries that need to be linked to all lib targets
 set(SYSLIBS "")
+
+list(APPEND SYSLIBS "${BSON_LIBRARIES}")
 
 # Create the thrift C++ library
 set( thriftcpp_SOURCES
@@ -41,6 +50,7 @@ set( thriftcpp_SOURCES
    src/thrift/concurrency/ThreadManager.cpp
    src/thrift/concurrency/TimerManager.cpp
    src/thrift/concurrency/Util.cpp
+   src/thrift/protocol/TBSONProtocol.cpp
    src/thrift/protocol/TDebugProtocol.cpp
    src/thrift/protocol/TDenseProtocol.cpp
    src/thrift/protocol/TJSONProtocol.cpp

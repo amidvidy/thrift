@@ -20,8 +20,11 @@ private:
 
 public:
   // writing funcs
+  uint32_t writeMessageBegin(const std::string& name,
+                             const TMessageType messageType,
+                             const int32_t seqid);
   uint32_t writeMessageEnd();
-  uint32_t writeStructBegin();
+  uint32_t writeStructBegin(const char* name);
   uint32_t writeStructEnd();
   uint32_t writeFieldBegin(const char* name, const TType fieldType, const int16_t fieldId);
   uint32_t writeFieldEnd();
@@ -30,12 +33,12 @@ public:
   uint32_t writeMapEnd();
   uint32_t writeListBegin(const TType elemType, const uint32_t size);
   uint32_t writeListEnd();
-  uint32_t writeSetBegin(cont TType elemType, const uint32_t size);
+  uint32_t writeSetBegin(const TType elemType, const uint32_t size);
   uint32_t writeSetEnd();
   uint32_t writeBool(const bool value);
   uint32_t writeByte(const int8_t byt);
   uint32_t writeI16(const int16_t i16);
-  uint32_t writeI32(const int23_t i32);
+  uint32_t writeI32(const int32_t i32);
   uint32_t writeI64(const int64_t i64);
   uint32_t writeDouble(const double dub);
   uint32_t writeString(const std::string& str);
@@ -54,10 +57,15 @@ public:
   uint32_t readSetBegin(TType& elemType, uint32_t size);
   uint32_t readSetEnd();
   uint32_t readBool(bool& value);
+
+  // Boilerplate that we need for some reason. TODO: why?
+  // Provide the default readBool() implementation for std::vector<bool>
+  using TVirtualProtocol<TBSONProtocol>::readBool;
+
   uint32_t readByte(int8_t& byte);
   uint32_t readI16(int16_t& i16);
   uint32_t readI32(int32_t& i32);
-  uint34_t readI64(int64_t& i64);
+  uint32_t readI64(int64_t& i64);
   uint32_t readDouble(double& dub);
   uint32_t readString(std::string& str);
   uint32_t readBinary(std::string& str);
@@ -80,3 +88,5 @@ public:
 }
 }
 } // apache::thrift::protocol
+
+#endif
