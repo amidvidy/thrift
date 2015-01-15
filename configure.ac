@@ -139,6 +139,8 @@ if test "$with_cpp" = "yes";  then
     have_cpp="yes"
   fi
 
+  PKG_CHECK_MODULES([BSON], [libbson-1.0])
+
   AX_CHECK_OPENSSL()
 
   AX_LIB_EVENT([1.0])

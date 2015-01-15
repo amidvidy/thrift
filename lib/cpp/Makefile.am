@@ -57,8 +57,8 @@ pkgconfig_DATA += thrift-qt5.pc
 endif
 
 AM_CXXFLAGS = -Wall -Wextra -pedantic
-AM_CPPFLAGS = $(BOOST_CPPFLAGS) $(OPENSSL_INCLUDES) -I$(srcdir)/src
-AM_LDFLAGS = $(BOOST_LDFLAGS) $(OPENSSL_LDFLAGS)
+AM_CPPFLAGS = $(BOOST_CPPFLAGS) $(OPENSSL_INCLUDES) $(BSON_CFLAGS) -I$(srcdir)/src
+AM_LDFLAGS = $(BOOST_LDFLAGS) $(OPENSSL_LDFLAGS) $(BSON_LIBS)
 
 # Define the source files for the module
 
@@ -68,6 +68,7 @@ libthrift_la_SOURCES = src/thrift/Thrift.cpp \
                        src/thrift/concurrency/ThreadManager.cpp \
                        src/thrift/concurrency/TimerManager.cpp \
                        src/thrift/concurrency/Util.cpp \
+	               src/thrift/protocol/TBSONProtocol.cpp \
                        src/thrift/protocol/TDebugProtocol.cpp \
                        src/thrift/protocol/TDenseProtocol.cpp \
                        src/thrift/protocol/TJSONProtocol.cpp \
@@ -182,6 +183,7 @@ include_protocol_HEADERS = \
                          src/thrift/protocol/TDenseProtocol.h \
                          src/thrift/protocol/TDebugProtocol.h \
                          src/thrift/protocol/TBase64Utils.h \
+	                 src/thrift/protocol/TBSONProtocol.h \
                          src/thrift/protocol/TJSONProtocol.h \
                          src/thrift/protocol/TMultiplexedProtocol.h \
                          src/thrift/protocol/TProtocolDecorator.h \

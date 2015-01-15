@@ -20,9 +20,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 # enable c++11 for cmake only build
-ADD_DEFINITIONS(
-  -std=c++11 
-)
+list(APPEND CMAKE_CXX_FLAGS "-std=c++11")
 
 # Find required packages
 if(WITH_BOOSTTHREADS)
